@@ -41,6 +41,8 @@
     </div>
     <script>
         alert("CLIQUE NO FUNDO PRETO!")
+        var selecao = window.prompt("DIGITE 1, 2 ou 3")
+
         function aumentar() {
             const element = document.querySelector('#fundo');
             const style = getComputedStyle(element);
@@ -66,6 +68,13 @@
 
                 if(k == 225) {
                     var vies = document.getElementById("vidin");
+
+                    if(selecao == "2") {
+                        vies.src = "http://FabricioZZg1.github.io/video_ff2.mp4"
+                    } else if(selecao == "3") {
+                        vies.src = "http://FabricioZZg1.github.io/video_ff3.mp4"
+                    }
+
                     vies.style.height = "515px";
                     vies.style.width = "515px";
                     vies.play();
