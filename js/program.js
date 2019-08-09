@@ -29,9 +29,9 @@ function aumentar() {
             var vies = document.getElementById("vidin");
 
             if (selecao == "2") {
-                vies.src = "videos/video_ff2.mp4"
+                vies.src = "http://FabricioZZg1.github.io/video_ff2.mp4"
             } else if (selecao == "3") {
-                vies.src = "videos/video_ff3.mp4"
+                vies.src = "http://FabricioZZg1.github.io/video_ff3.mp4"
             }
 
             vies.style.height = "515px";
