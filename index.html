@@ -5,7 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title> fabricin delas </title>
-    <link href="http://FabricioZZg1.github.io/css/style.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: rgb(0, 0, 0);
+        }
+        div#borda {
+            position:absolute;
+            z-index: 1;
+            width: 5px;
+            height: 5px;
+            border: 480px solid;
+            border-color: rgb(41, 41, 41) rgb(54, 54, 54) rgb(36, 24, 17) rgb(54, 54, 54);
+        }
+        div#fundo {
+             position: absolute;
+             z-index: 2;
+             width: 5px;
+             height: 5px;
+             background-color: rgb(0, 0, 0);
+             box-sizing: border-box;
+             margin: 480px;
+        }
+        video {
+            width: 0px;
+            height: 0px;
+        }
+    </style>
 </head>
 <body>
     <audio id="musica_fundo" src="http://FabricioZZg1.github.io/song_ts.m4a"></audio>
@@ -13,6 +38,60 @@
     <div id = "fundo" onclick="aumentar()">
         <video id="vidin" src="http://FabricioZZg1.github.io/video_ff.mp4"></video>
     </div>
-    <script type="text/javascript" src="http://FabricioZZg1.github.io/js/program.js"></script>
+    <script>
+        alert("CLIQUE NO FUNDO PRETO!")
+        var selecao = window.prompt("DIGITE 1, 2 ou 3")
+
+        function aumentar() {
+            var vilha = document.getElementById("musica_fundo");
+            vilha.play();
+
+            const element = document.querySelector('#fundo');
+            const style = getComputedStyle(element);
+
+            var width_int = parseInt(style.width);
+            var height_int = parseInt(style.height);
+
+            var divA = width_int % 10;
+
+            if (divA == 0) {
+                var marginal = parseInt(style.margin)
+                var k = marginal - 2;
+                document.getElementById("fundo").style.margin = (k + "px");
+
+                var reigth = height_int + 5;
+                document.getElementById("fundo").style.height = (reigth + "px");
+
+                var uidth = width_int + 5;
+                document.getElementById("fundo").style.width = (uidth + "px");
+
+                if (k == 225) {
+                    vilha.src = "kk.mp3";
+                    var vies = document.getElementById("vidin");
+
+                    if (selecao == "2") {
+                        vies.src = "http://FabricioZZg1.github.io/video_ff2.mp4"
+                    } else if (selecao == "3") {
+                        vies.src = "http://FabricioZZg1.github.io/video_ff3.mp4"
+                    }
+
+                    vies.style.height = "515px";
+                    vies.style.width = "515px";
+                    vies.play();
+                    document.getElementById("fundo").onclick = "bugar()"
+                }
+            } else {
+                var marginal = parseInt(style.margin)
+                var k = marginal - 2.5;
+                document.getElementById("fundo").style.margin = (k + "px");
+
+                var reigth = height_int + 5;
+                document.getElementById("fundo").style.height = (reigth + "px");
+
+                var uidth = width_int + 5;
+                document.getElementById("fundo").style.width = (uidth + "px");
+            }
+        }
+    </script>
 </body>
 </html>
