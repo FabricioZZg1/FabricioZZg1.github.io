@@ -191,4 +191,4 @@ async def fabia(ctx):
 # =-=-=-=-= FALAS FIM =-=-=-=-= #
 # =-=-=-=-= COMANDOS FIM =-=-=-=-= #
 
-client.run('NjE0NjQ1MzYwNjQzODAxMTI4.XWCf4A.43llU-3HPY2skXrO3TsFiiUfCiM')
+client.run('TOKEN')
