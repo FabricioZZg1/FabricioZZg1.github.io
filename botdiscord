@@ -1,0 +1,194 @@
+import os
+import discord
+import youtube_dl
+from discord.ext import commands
+import random
+from discord import Game
+import time
+from giphy_client.rest import ApiException
+import giphy_client
+from discord.ext.commands import Bot
+import asyncio
+from discord.utils import get
+from discord import FFmpegPCMAudio
+from os import system
+
+giphy_token = "3wQgHugNpaj1SNIklYvJnp7v3BvHyXYP"
+discord_token = "BQAwk9zAUwE2J9BYGu4SqGZfCaaXgRWYlLX3_Pk_i5IUPfYscwCQf6b95eE3ERLXRwL_9bQ85NF5-n8LTrvWMPw0Ez5ETNm9MIP_e8SBuCuLktVi88x35auFkVuhCD03L72fnLAOA6oTQrWbf8wijuFBIeZ9GJYDrSqCq-J2kBZf4ZFHvjNfA7gb"
+
+client = commands.Bot(command_prefix = "$")
+api_instance = giphy_client.DefaultApi()
+
+songs = asyncio.Queue()
+play_next_song = asyncio.Event()
+players = {}
+
+
+@client.event
+async def on_ready():
+    activity = discord.Game(name="$ajudatecks")
+    await client.change_presence(status=discord.Status.online, activity=activity)
+    print("Tecker está online.")
+
+# =-=-=-=-= COMANDOS =-=-=-=-= #
+@client.command()
+async def ajudatecks(ctx):
+    await ctx.send("""```<COMANDOS>
+    **$ping** = Mostra o ping entre o envio do comando até o recebimento do BOT
+    **$joanaarthura** = Digita uma frase aleatória da JOANAATURA
+    **$paula/pauletinha** = Digita uma frase aleatória da PAULA
+    **$fabia** = Digita uma frase para a FABIA
+    **$limpateck (valor)** = Limpa a quantidade desejada de mensagens do canal
+    **$veia** = Manda um GIF de veia
+    **$voltapadrin (Nome#ID)** = Desbanir alguém
+    **$entrairmao** = Entra no canal
+    **$tocaaquela (URL)** = Toca uma musica do YOUTUBE
+    **$saiatecks** = Sai do canal```""")
+
+@client.command(pass_context=True, brief="Makes the bot join your channel", aliases=['j', 'jo'])
+async def entrairmao(ctx):
+    channel = ctx.message.author.voice.channel
+    if not channel:
+        await ctx.send("Tu nao estas em um canal")
+        return
+    voice = get(client.voice_clients, guild=ctx.guild)
+    if voice and voice.is_connected():
+        await voice.move_to(channel)
+    else:
+        voice = await channel.connect()
+    await ctx.send("teckbeck chegou carai, so nao me zoa mano")
+
+@client.command(pass_context=True, brief="This will play a song 'play [url]'", aliases=['pl'])
+async def tocaaquela(ctx, url: str):
+    song_there = os.path.isfile("song.mp3")
+    try:
+        if song_there:
+            os.remove("song.mp3")
+    except PermissionError:
+        await ctx.send("Espera a musica irmao")
+        return
+    await ctx.send("Baixando a musica...")
+    print("Someone wants to play music let me get that ready for them...")
+    voice = get(client.voice_clients, guild=ctx.guild)
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+    }
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([url])
+    for file in os.listdir("./"):
+        if file.endswith(".mp3"):
+            os.rename(file, 'song.mp3')
+    voice.play(discord.FFmpegPCMAudio("song.mp3"))
+    voice.volume = 100
+    voice.is_playing()
+    await ctx.send("Pronto")
+
+@client.command(pass_context=True, brief="Makes the bot leave your channel", aliases=['l', 'le', 'lea'])
+async def saiatecks(ctx):
+    channel = ctx.message.author.voice.channel
+    voice = get(client.voice_clients, guild=ctx.guild)
+    if voice and voice.is_connected():
+        await voice.disconnect()
+        await ctx.send("me zoaram muito, tchau")
+    else:
+        await ctx.send("Nao to no canal")
+
+#@client.command()
+#async def carguin(ctx, member : discord.Member):
+    #role = discord.utils.get(ctx.guild.roles, name="CADELA BIXA GAY")
+    #await member.remove_roles(role)
+
+    #remove ou add
+
+@client.command()
+async def ping(ctx):
+    await ctx.send(f"{round(client.latency * 1000)}ms")
+
+    if((round(client.latency * 1000)) > 100):
+        await ctx.send("internet lixo")
+    else:
+        await ctx.send("internet boazinha até")
+
+@client.command()
+async def limpateck(ctx, amount = 1):
+    await ctx.channel.purge(limit=amount)
+    await ctx.send("""```css
+mutado lkkkkkk```""")
+    time.sleep(2)
+    amount = 1
+    await ctx.channel.purge(limit=amount)
+
+#@client.command()
+#async def saia(ctx, member : discord.Member, *, reason=None):
+    #await member.kick(reason=reason)
+
+#@client.command()
+#async def saiaenvolta(ctx, member : discord.Member, *, reason=None):
+    #await member.ban(reason=reason)
+
+@client.command()
+async def voltapadrin(ctx, *, member):
+    banned_users = await ctx.guild.bans()
+    member_name, member_discriminator = member.split("#")
+
+    for ban_entry in banned_users:
+        user = ban_entry.user
+
+        if(user.name, user.discriminator) == (member_name, member_discriminator):
+            await ctx.guild.unban(user)
+            return
+
+async def search_gifs(query):
+    try:
+        response = api_instance.gifs_search_get(giphy_token,
+            query, limit=3, rating="g")
+        lst = list(response.data)
+        gif = random.choices(lst)
+
+        return gif[0].url
+
+    except ApiException as e:
+        return "Exception when calling DefaultApi->gifs_search_get: %s\n" % e
+
+@client.command()
+async def veia(ctx):
+    lista = ["oldwoman", "elderly woman", "idosas", "idosa"]
+
+    gif = await search_gifs(random.choice(lista))
+    await ctx.send(gif)
+
+# =-=-=-=-= FALAS =-=-=-=-= #
+@client.command()
+async def joanaarthura(ctx):
+    frases = ["para de me zuar mano, namoral",
+              "vo mata a joanaartura"]
+
+    await ctx.send(f"{random.choice(frases)}")
+
+@client.command(aliases = ["pauletinha"])
+async def paula(ctx):
+    frases = ["vo me mataaaaaaaaaa",
+                 "vo faze parkur, ja volto",
+                 "me da um monste man, por favor",
+                 "vo fugi de casa kkkkkkkkk",
+                 "vo desmancha a helennnnnnn",
+                 "to bebadaaaa",
+                 "PAULINHA TAO CRONANDO O CARTAO DENOVO AAAAAAAAAAAAAAAAAAAAAAAA",
+                 "natalia eu poderia por obsequio me gesticular em call e me mata?",
+                 "ta gravado, pode continua!"]
+
+    await ctx.send(f"{random.choice(frases)}")
+
+@client.command()
+async def fabia(ctx):
+    await ctx.send("baa mew, te curto afu mew")
+
+# =-=-=-=-= FALAS FIM =-=-=-=-= #
+# =-=-=-=-= COMANDOS FIM =-=-=-=-= #
+
+client.run('NjE0NjQ1MzYwNjQzODAxMTI4.XWCf4A.43llU-3HPY2skXrO3TsFiiUfCiM')
