@@ -13,8 +13,8 @@ from discord.utils import get
 from discord import FFmpegPCMAudio
 from os import system
 
-giphy_token = "3wQgHugNpaj1SNIklYvJnp7v3BvHyXYP"
-discord_token = "BQAwk9zAUwE2J9BYGu4SqGZfCaaXgRWYlLX3_Pk_i5IUPfYscwCQf6b95eE3ERLXRwL_9bQ85NF5-n8LTrvWMPw0Ez5ETNm9MIP_e8SBuCuLktVi88x35auFkVuhCD03L72fnLAOA6oTQrWbf8wijuFBIeZ9GJYDrSqCq-J2kBZf4ZFHvjNfA7gb"
+giphy_token = ""
+discord_token = ""
 
 client = commands.Bot(command_prefix = "$")
 api_instance = giphy_client.DefaultApi()
